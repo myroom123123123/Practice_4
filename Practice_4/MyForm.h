@@ -276,89 +276,84 @@ namespace Practice4 {
 	// Initialize DataGridView
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
 	{
-		dataGridView1->Rows->Add(10);
-		dataGridView2->Rows->Add(10);
+		// Initialize dataGridView1 for a 5x5 matrix
+		dataGridView1->ColumnCount = 5;
+		for (int i = 0; i < 5; i++) {
+			dataGridView1->Columns[i]->Width = 40;
+		}
+		dataGridView1->Rows->Add(5);
+
+		// Initialize dataGridView2 for a single row to show column maximums
+		dataGridView2->ColumnCount = 5;
+		for (int i = 0; i < 5; i++) {
+			dataGridView2->Columns[i]->Width = 40;
+		}
+		dataGridView2->Rows->Add(1);
 	}
 
-	// Заповнити масив
+	// Заповнити масив - Fill array with random values
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) 
 	{
-		srand(time(NULL));
-		n = Convert::ToInt32(textBox1->Text);
-		a = gcnew cli::array<int>(n); // Allocate managed array
-		textBox2->Clear();
-		
-		// Clear previous data in DataGridView
-		dataGridView1->Columns->Clear();
-		dataGridView1->Columns->Add("Column", "");
-		dataGridView1->Rows->Clear();
-		dataGridView1->Rows->Add(n);
-		
-		for (i = 0; i < n; i++)
-		{
-			a[i] = rand() % 50;
-			textBox2->AppendText(Convert::ToString(a[i]) + " ");
-			dataGridView1->Rows[i]->Cells[0]->Value = a[i].ToString();
-		}
+		Random^ rnd = gcnew Random();
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++) 
+				dataGridView1->Rows[i]->Cells[j]->Value = rnd->Next(50);
 	}
 
-	// Сортувати масив, метод екстремальних елементів
+	// Сортувати масив - Find maximum values in each column
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) 
 	{
-		for (j = 0; j < n-1; j++)
+		int a[5][5], x[5];
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++)
+				a[i][j] = Convert::ToInt32(dataGridView1->Rows[i]->Cells[j]->Value);
+		
+		for (int j = 0; j < 5; j++)
 		{
-			min = j;
-			for (i = j+1; i < n; i++)
-			{
-				if (a[i] > a[min])
-				{
-					dop = a[min];
-					a[min] = a[i];
-					a[i] = dop;
-				}
-			}
+			x[j] = a[0][j];
+			for (int i = 0; i < 5; i++)
+				if(x[j] < a[i][j]) x[j] = a[i][j];
+			dataGridView2->Rows[0]->Cells[j]->Value = Convert::ToString(x[j]);
 		}
-		textBox3->Clear();
-		for (i = 0; i < n; i++)
-			textBox3->AppendText(Convert::ToString(a[i]) + " ");
 	}
 
-	// Обчислити суму не парних елементів масиву, кількість парних елементів масиву
+	// Очистити - Clear all grid cells
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) 
 	{
-		k = 0; 
-		int s = 0;
-		textBox4->Clear();
-		for (i = 0; i < n; i++)
-		{
-			if (a[i] % 2 == 1)
-			{
-				s += a[i];
-			}
-			else 
-			{
-				k += 1;
-			}
-		}
-		textBox4->AppendText(Convert::ToString(s));
-		textBox5->Clear();
-		textBox5->AppendText(Convert::ToString(k));
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 5; j++) 
+				dataGridView1->Rows[i]->Cells[j]->Value = "";
+		
+		for (int j = 0; j < 5; j++) 
+			dataGridView2->Rows[0]->Cells[j]->Value = "";
 	}
 
-	// Сортувати масив методом бульбашки
+	// Сортувати масив методом бульбашки - Bubble sort implementation
 	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		const int n=10;
-		int i, j, dop;
-		a[i]=Convert::ToInt32(dataGridView1->Rows[i]->Cells[0]->Value);
-		for (i=0; i<n-1; i++)
-			for (j=0; j<n-i-1; j++)
+		// Read array values from dataGridView1
+		n = Convert::ToInt32(textBox1->Text);
+		if (n > 10) n = 10; // Limit to 10 elements
+		
+		a = gcnew cli::array<int>(n);
+		
+		// Get values from dataGridView1 (assuming single column)
+		for (i = 0; i < n; i++) {
+			if (dataGridView1->Rows[i]->Cells[0]->Value != nullptr)
+				a[i] = Convert::ToInt32(dataGridView1->Rows[i]->Cells[0]->Value);
+			else
+				a[i] = 0;
+		}
+		
+		// Bubble sort algorithm
+		for (i = 0; i < n-1; i++)
+			for (j = 0; j < n-i-1; j++)
 			{
-				if (a[j]>a[j+1])
+				if (a[j] > a[j+1])
 				{
-					dop=a[j+1];
-					a[j+1]=a[j];
-					a[j]=dop;
+					dop = a[j+1];
+					a[j+1] = a[j];
+					a[j] = dop;
 				}
 			}
 		
@@ -368,7 +363,8 @@ namespace Practice4 {
 		dataGridView2->Rows->Clear();
 		dataGridView2->Rows->Add(n);
 		
-		for (i=0; i<n; i++)
+		// Display sorted array in dataGridView2
+		for (i = 0; i < n; i++)
 			dataGridView2->Rows[i]->Cells[0]->Value = a[i].ToString();
 	}
 	};
