@@ -39,7 +39,8 @@ namespace Practice4 {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
-	private: System::Windows::Forms::Button^  button4; // New button for mean calculation
+	private: System::Windows::Forms::Button^  button4; // Mean calculation
+	private: System::Windows::Forms::Button^  button5; // Max, min, sum calculation
 	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: System::Windows::Forms::DataGridView^  dataGridView2;
 	private: System::Windows::Forms::DataGridView^  dataGridView3;
@@ -63,6 +64,7 @@ namespace Practice4 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridView3 = (gcnew System::Windows::Forms::DataGridView());
@@ -112,6 +114,16 @@ namespace Practice4 {
 			this->button4->Text = L"Середнє";
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
+			 // button5
+			// 
+			this->button5->Location = System::Drawing::Point(462, 115);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(100, 23);
+			this->button5->TabIndex = 9;
+			this->button5->Text = L"Мін/Макс/Сума";
+			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
 			// 
 			// dataGridView1
 			// 
@@ -165,6 +177,7 @@ namespace Practice4 {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(584, 260);
+			this->Controls->Add(this->button5);
 			this->Controls->Add(this->lblResult);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
@@ -312,6 +325,54 @@ namespace Practice4 {
 		
 		// Display result
 		lblResult->Text = String::Format("Середнє арифметичне елементів з парними індексами: {0:F2}", mean);
+	}
+	
+	// Find maximum, minimum and sum of all elements
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		int a[10];
+		
+		// Get values from dataGridView1
+		for (int i = 0; i < 10; i++) {
+			if (dataGridView1->Rows[0]->Cells[i]->Value != nullptr)
+				a[i] = Convert::ToInt32(dataGridView1->Rows[0]->Cells[i]->Value);
+			else
+				a[i] = 0;
+		}
+		
+		// Initialize min and max with the first element
+		int min = a[0];
+		int max = a[0];
+		int sum = a[0];
+		int minIndex = 0;
+		int maxIndex = 0;
+		
+		// Find min, max and calculate sum
+		for (int i = 1; i < 10; i++) {
+			if (a[i] < min) {
+				min = a[i];
+				minIndex = i;
+			}
+			if (a[i] > max) {
+				max = a[i];
+				maxIndex = i;
+			}
+			sum += a[i];
+		}
+		
+		// Reset all cell backgrounds in dataGridView2
+		for (int i = 0; i < 10; i++) {
+			dataGridView2->Rows[0]->Cells[i]->Value = Convert::ToString(a[i]);
+			dataGridView2->Rows[0]->Cells[i]->Style->BackColor = Color::White;
+		}
+		
+		// Highlight min and max elements
+		dataGridView2->Rows[0]->Cells[minIndex]->Style->BackColor = Color::LightBlue;
+		dataGridView2->Rows[0]->Cells[maxIndex]->Style->BackColor = Color::LightCoral;
+		
+		// Display result
+		lblResult->Text = String::Format("Мінімальний елемент: {0} (індекс {1}), Максимальний елемент: {2} (індекс {3}), Сума: {4}", 
+			min, minIndex, max, maxIndex, sum);
 	}
 	};
 }
