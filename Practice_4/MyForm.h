@@ -39,10 +39,12 @@ namespace Practice4 {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::Button^  button4; // New button for mean calculation
 	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: System::Windows::Forms::DataGridView^  dataGridView2;
 	private: System::Windows::Forms::DataGridView^  dataGridView3;
 	private: System::Windows::Forms::Label^  lblTitle;
+	private: System::Windows::Forms::Label^  lblResult; // Label to display result
 
 	private:
 		/// <summary>
@@ -60,10 +62,12 @@ namespace Practice4 {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridView3 = (gcnew System::Windows::Forms::DataGridView());
 			this->lblTitle = (gcnew System::Windows::Forms::Label());
+			this->lblResult = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView3))->BeginInit();
@@ -89,7 +93,7 @@ namespace Practice4 {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
-			 // button3
+			// button3
 			// 
 			this->button3->Location = System::Drawing::Point(350, 80);
 			this->button3->Name = L"button3";
@@ -98,6 +102,16 @@ namespace Practice4 {
 			this->button3->Text = L"Квадрат";
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(350, 150);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(100, 23);
+			this->button4->TabIndex = 7;
+			this->button4->Text = L"Середнє";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
 			// 
 			// dataGridView1
 			// 
@@ -138,11 +152,21 @@ namespace Practice4 {
 			this->lblTitle->TabIndex = 5;
 			this->lblTitle->Text = L"Заповнення одновимірної матриці";
 			// 
+			// lblResult
+			// 
+			this->lblResult->AutoSize = true;
+			this->lblResult->Location = System::Drawing::Point(12, 230);
+			this->lblResult->Name = L"lblResult";
+			this->lblResult->Size = System::Drawing::Size(0, 13);
+			this->lblResult->TabIndex = 8;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(584, 230);
+			this->ClientSize = System::Drawing::Size(584, 260);
+			this->Controls->Add(this->lblResult);
+			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->lblTitle);
 			this->Controls->Add(this->dataGridView3);
@@ -186,12 +210,15 @@ namespace Practice4 {
 		dataGridView3->Rows->Add(1);
 	}
 
-	// Fill array with random values in range [0-50]
+	// Fill array with random values in range [-50 to 50]
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) 
 	{
 		Random^ rnd = gcnew Random();
 		for (int i = 0; i < 10; i++)
-			dataGridView1->Rows[0]->Cells[i]->Value = rnd->Next(50);
+			dataGridView1->Rows[0]->Cells[i]->Value = rnd->Next(-50, 51); // Changed range to [-50, 50]
+		
+		// Clear result label when new array is generated
+		lblResult->Text = "";
 	}
 
 	// Sort array using bubble sort algorithm
@@ -247,6 +274,44 @@ namespace Practice4 {
 			a[i] = a[i] * a[i];
 			dataGridView2->Rows[0]->Cells[i]->Value = Convert::ToString(a[i]);
 		}
+	}
+
+	// Calculate arithmetic mean of even-indexed elements
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		int a[10];
+		double sum = 0;
+		int count = 0;
+		
+		// Get values from dataGridView1
+		for (int i = 0; i < 10; i++) {
+			if (dataGridView1->Rows[0]->Cells[i]->Value != nullptr)
+				a[i] = Convert::ToInt32(dataGridView1->Rows[0]->Cells[i]->Value);
+			else
+				a[i] = 0;
+		}
+		
+		// Highlight even-indexed elements and calculate their sum
+		for (int i = 0; i < 10; i++) {
+			if (i % 2 == 0) { // Even index (0, 2, 4, 6, 8)
+				sum += a[i];
+				count++;
+				
+				// Highlight the even-indexed elements in dataGridView2
+				dataGridView2->Rows[0]->Cells[i]->Value = Convert::ToString(a[i]);
+				dataGridView2->Rows[0]->Cells[i]->Style->BackColor = Color::LightGreen;
+			} else {
+				// Clear odd-indexed cells
+				dataGridView2->Rows[0]->Cells[i]->Value = "";
+				dataGridView2->Rows[0]->Cells[i]->Style->BackColor = Color::White;
+			}
+		}
+		
+		// Calculate arithmetic mean
+		double mean = sum / count;
+		
+		// Display result
+		lblResult->Text = String::Format("Середнє арифметичне елементів з парними індексами: {0:F2}", mean);
 	}
 	};
 }
