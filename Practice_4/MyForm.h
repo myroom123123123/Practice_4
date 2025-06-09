@@ -49,6 +49,10 @@ namespace Practice4 {
 	private: System::Windows::Forms::Label^  lblSortedArray;
 	private: System::Windows::Forms::Label^  lblSumOdd;
 	private: System::Windows::Forms::Label^  lblCountEven;
+	private: System::Windows::Forms::DataGridView^  dataGridView1;
+	private: System::Windows::Forms::DataGridView^  dataGridView2;
+	private: System::Windows::Forms::Button^  button4;
+	private: System::Windows::Forms::Label^  lblBubbleSort;
 
 	private:
 		/// <summary>
@@ -78,6 +82,12 @@ namespace Practice4 {
 			this->lblSortedArray = (gcnew System::Windows::Forms::Label());
 			this->lblSumOdd = (gcnew System::Windows::Forms::Label());
 			this->lblCountEven = (gcnew System::Windows::Forms::Label());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
+			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->lblBubbleSort = (gcnew System::Windows::Forms::Label());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -191,11 +201,54 @@ namespace Practice4 {
 			this->lblCountEven->TabIndex = 12;
 			this->lblCountEven->Text = L"Кількість парних елементів масиву:";
 			// 
+			 // dataGridView1
+			// 
+			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->ColumnHeadersVisible = false;
+			this->dataGridView1->RowHeadersVisible = false;
+			this->dataGridView1->Location = System::Drawing::Point(12, 250);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->Size = System::Drawing::Size(220, 120);
+			this->dataGridView1->TabIndex = 13;
+			// 
+			// dataGridView2
+			// 
+			this->dataGridView2->AllowUserToAddRows = false;
+			this->dataGridView2->ColumnHeadersVisible = false;
+			this->dataGridView2->RowHeadersVisible = false;
+			this->dataGridView2->Location = System::Drawing::Point(250, 250);
+			this->dataGridView2->Name = L"dataGridView2";
+			this->dataGridView2->Size = System::Drawing::Size(220, 120);
+			this->dataGridView2->TabIndex = 14;
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(12, 200);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(129, 23);
+			this->button4->TabIndex = 15;
+			this->button4->Text = L"Сортувати (бульбашкою)";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
+			// 
+			// lblBubbleSort
+			// 
+			this->lblBubbleSort->AutoSize = true;
+			this->lblBubbleSort->Location = System::Drawing::Point(147, 205);
+			this->lblBubbleSort->Name = L"lblBubbleSort";
+			this->lblBubbleSort->Size = System::Drawing::Size(174, 13);
+			this->lblBubbleSort->TabIndex = 16;
+			this->lblBubbleSort->Text = L"Сортування методом бульбашки:";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(484, 211);
+			this->ClientSize = System::Drawing::Size(484, 380);
+			this->Controls->Add(this->lblBubbleSort);
+			this->Controls->Add(this->button4);
+			this->Controls->Add(this->dataGridView2);
+			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->lblCountEven);
 			this->Controls->Add(this->lblSumOdd);
 			this->Controls->Add(this->lblSortedArray);
@@ -212,11 +265,20 @@ namespace Practice4 {
 			this->Name = L"MyForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"MyForm";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
-
 		}
 #pragma endregion
+
+	// Initialize DataGridView
+	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
+	{
+		dataGridView1->Rows->Add(10);
+		dataGridView2->Rows->Add(10);
+	}
 
 	// Заповнити масив
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -225,10 +287,18 @@ namespace Practice4 {
 		n = Convert::ToInt32(textBox1->Text);
 		a = gcnew cli::array<int>(n); // Allocate managed array
 		textBox2->Clear();
+		
+		// Clear previous data in DataGridView
+		dataGridView1->Columns->Clear();
+		dataGridView1->Columns->Add("Column", "");
+		dataGridView1->Rows->Clear();
+		dataGridView1->Rows->Add(n);
+		
 		for (i = 0; i < n; i++)
 		{
 			a[i] = rand() % 50;
 			textBox2->AppendText(Convert::ToString(a[i]) + " ");
+			dataGridView1->Rows[i]->Cells[0]->Value = a[i].ToString();
 		}
 	}
 
@@ -273,6 +343,33 @@ namespace Practice4 {
 		textBox4->AppendText(Convert::ToString(s));
 		textBox5->Clear();
 		textBox5->AppendText(Convert::ToString(k));
+	}
+
+	// Сортувати масив методом бульбашки
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		const int n=10;
+		int i, j, dop;
+		a[i]=Convert::ToInt32(dataGridView1->Rows[i]->Cells[0]->Value);
+		for (i=0; i<n-1; i++)
+			for (j=0; j<n-i-1; j++)
+			{
+				if (a[j]>a[j+1])
+				{
+					dop=a[j+1];
+					a[j+1]=a[j];
+					a[j]=dop;
+				}
+			}
+		
+		// Clear previous data in DataGridView2
+		dataGridView2->Columns->Clear();
+		dataGridView2->Columns->Add("Column", "");
+		dataGridView2->Rows->Clear();
+		dataGridView2->Rows->Add(n);
+		
+		for (i=0; i<n; i++)
+			dataGridView2->Rows[i]->Cells[0]->Value = a[i].ToString();
 	}
 	};
 }
