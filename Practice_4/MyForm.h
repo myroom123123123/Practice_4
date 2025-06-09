@@ -41,7 +41,9 @@ namespace Practice4 {
 	private: System::Windows::Forms::Label^  lblArraySize;
 	private: System::Windows::Forms::Label^  lblResult;
 	private: System::Windows::Forms::ListBox^  lstArray;
-	private: System::Windows::Forms::Label^  lblProduct;
+	private: System::Windows::Forms::Label^  lblArrayElements;
+	private: System::Windows::Forms::GroupBox^  groupBoxControls;
+	private: System::Windows::Forms::GroupBox^  groupBoxArray;
 
 	private: 
 		array<int>^ arrayData;
@@ -66,14 +68,18 @@ namespace Practice4 {
 			this->lblArraySize = (gcnew System::Windows::Forms::Label());
 			this->lblResult = (gcnew System::Windows::Forms::Label());
 			this->lstArray = (gcnew System::Windows::Forms::ListBox());
-			this->lblProduct = (gcnew System::Windows::Forms::Label());
+			this->lblArrayElements = (gcnew System::Windows::Forms::Label());
+			this->groupBoxControls = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxArray = (gcnew System::Windows::Forms::GroupBox());
+			this->groupBoxControls->SuspendLayout();
+			this->groupBoxArray->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// btnGenerateArray
 			// 
-			this->btnGenerateArray->Location = System::Drawing::Point(12, 41);
+			this->btnGenerateArray->Location = System::Drawing::Point(15, 68);
 			this->btnGenerateArray->Name = L"btnGenerateArray";
-			this->btnGenerateArray->Size = System::Drawing::Size(129, 23);
+			this->btnGenerateArray->Size = System::Drawing::Size(120, 25);
 			this->btnGenerateArray->TabIndex = 0;
 			this->btnGenerateArray->Text = L"Згенерувати масив";
 			this->btnGenerateArray->UseVisualStyleBackColor = true;
@@ -81,9 +87,9 @@ namespace Practice4 {
 			// 
 			// btnCalculate
 			// 
-			this->btnCalculate->Location = System::Drawing::Point(12, 70);
+			this->btnCalculate->Location = System::Drawing::Point(15, 99);
 			this->btnCalculate->Name = L"btnCalculate";
-			this->btnCalculate->Size = System::Drawing::Size(129, 23);
+			this->btnCalculate->Size = System::Drawing::Size(120, 25);
 			this->btnCalculate->TabIndex = 1;
 			this->btnCalculate->Text = L"Обчислити";
 			this->btnCalculate->UseVisualStyleBackColor = true;
@@ -91,23 +97,23 @@ namespace Practice4 {
 			// 
 			// txtArraySize
 			// 
-			this->txtArraySize->Location = System::Drawing::Point(147, 12);
+			this->txtArraySize->Location = System::Drawing::Point(15, 42);
 			this->txtArraySize->Name = L"txtArraySize";
-			this->txtArraySize->Size = System::Drawing::Size(121, 20);
+			this->txtArraySize->Size = System::Drawing::Size(230, 20);
 			this->txtArraySize->TabIndex = 2;
 			// 
 			// txtResult
 			// 
-			this->txtResult->Location = System::Drawing::Point(147, 109);
+			this->txtResult->Location = System::Drawing::Point(15, 155);
 			this->txtResult->Name = L"txtResult";
 			this->txtResult->ReadOnly = true;
-			this->txtResult->Size = System::Drawing::Size(121, 20);
+			this->txtResult->Size = System::Drawing::Size(230, 20);
 			this->txtResult->TabIndex = 3;
 			// 
 			// lblArraySize
 			// 
 			this->lblArraySize->AutoSize = true;
-			this->lblArraySize->Location = System::Drawing::Point(12, 15);
+			this->lblArraySize->Location = System::Drawing::Point(12, 26);
 			this->lblArraySize->Name = L"lblArraySize";
 			this->lblArraySize->Size = System::Drawing::Size(129, 13);
 			this->lblArraySize->TabIndex = 4;
@@ -116,7 +122,7 @@ namespace Practice4 {
 			// lblResult
 			// 
 			this->lblResult->AutoSize = true;
-			this->lblResult->Location = System::Drawing::Point(12, 112);
+			this->lblResult->Location = System::Drawing::Point(12, 139);
 			this->lblResult->Name = L"lblResult";
 			this->lblResult->Size = System::Drawing::Size(129, 13);
 			this->lblResult->TabIndex = 5;
@@ -125,37 +131,60 @@ namespace Practice4 {
 			// lstArray
 			// 
 			this->lstArray->FormattingEnabled = true;
-			this->lstArray->Location = System::Drawing::Point(288, 12);
+			this->lstArray->Location = System::Drawing::Point(15, 42);
 			this->lstArray->Name = L"lstArray";
-			this->lstArray->Size = System::Drawing::Size(184, 173);
+			this->lstArray->Size = System::Drawing::Size(175, 134);
 			this->lstArray->TabIndex = 6;
 			// 
-			// lblProduct
+			// lblArrayElements
 			// 
-			this->lblProduct->AutoSize = true;
-			this->lblProduct->Location = System::Drawing::Point(12, 178);
-			this->lblProduct->Name = L"lblProduct";
-			this->lblProduct->Size = System::Drawing::Size(129, 13);
-			this->lblProduct->TabIndex = 7;
-			this->lblProduct->Text = L"Добуток парних елементів:";
+			this->lblArrayElements->AutoSize = true;
+			this->lblArrayElements->Location = System::Drawing::Point(12, 26);
+			this->lblArrayElements->Name = L"lblArrayElements";
+			this->lblArrayElements->Size = System::Drawing::Size(116, 13);
+			this->lblArrayElements->TabIndex = 7;
+			this->lblArrayElements->Text = L"Добуток парних елементів:";
+			// 
+			// groupBoxControls
+			// 
+			this->groupBoxControls->Controls->Add(this->lblResult);
+			this->groupBoxControls->Controls->Add(this->lblArraySize);
+			this->groupBoxControls->Controls->Add(this->txtResult);
+			this->groupBoxControls->Controls->Add(this->txtArraySize);
+			this->groupBoxControls->Controls->Add(this->btnCalculate);
+			this->groupBoxControls->Controls->Add(this->btnGenerateArray);
+			this->groupBoxControls->Location = System::Drawing::Point(12, 12);
+			this->groupBoxControls->Name = L"groupBoxControls";
+			this->groupBoxControls->Size = System::Drawing::Size(260, 190);
+			this->groupBoxControls->TabIndex = 8;
+			this->groupBoxControls->TabStop = false;
+			// 
+			// groupBoxArray
+			// 
+			this->groupBoxArray->Controls->Add(this->lblArrayElements);
+			this->groupBoxArray->Controls->Add(this->lstArray);
+			this->groupBoxArray->Location = System::Drawing::Point(278, 12);
+			this->groupBoxArray->Name = L"groupBoxArray";
+			this->groupBoxArray->Size = System::Drawing::Size(205, 190);
+			this->groupBoxArray->TabIndex = 9;
+			this->groupBoxArray->TabStop = false;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(484, 211);
-			this->Controls->Add(this->lblProduct);
-			this->Controls->Add(this->lstArray);
-			this->Controls->Add(this->lblResult);
-			this->Controls->Add(this->lblArraySize);
-			this->Controls->Add(this->txtResult);
-			this->Controls->Add(this->txtArraySize);
-			this->Controls->Add(this->btnCalculate);
-			this->Controls->Add(this->btnGenerateArray);
+			this->ClientSize = System::Drawing::Size(494, 211);
+			this->Controls->Add(this->groupBoxArray);
+			this->Controls->Add(this->groupBoxControls);
+			this->MaximizeBox = false;
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->Text = L"Знайти добуток всіх парних елементів одновимірного масиву";
+			this->groupBoxControls->ResumeLayout(false);
+			this->groupBoxControls->PerformLayout();
+			this->groupBoxArray->ResumeLayout(false);
+			this->groupBoxArray->PerformLayout();
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -207,7 +236,7 @@ namespace Practice4 {
 			txtResult->Text = product.ToString();
 		}
 		else {
-			txtResult->Text = "No even elements found";
+			txtResult->Text = "Не знайдено парних елементів";
 		}
 	}
 	};
